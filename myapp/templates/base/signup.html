@@ -1,0 +1,49 @@
+{% extends 'base/base.html' %}
+   {% load staticfiles %}
+    {% block contain %}
+    	 <div class="forms">
+               <div id="cards" >
+        <p>  {{alert}}
+<form method="post" enctype="multipart/form-data" onsubmit="return signupcheck()" name="myform">
+    {% csrf_token %}
+    <br><div class="upload-btn-wrapper">
+    User Id:
+    {{ form.user_id }}
+    <font size="3px" color="red"> {{id_check}}</font>
+    <br>
+     Fname
+     {{ form.Fname}}
+<br>
+Lname
+ {{ form.Lname}}
+ <br>
+Address
+ {{ form.Address}}<br>
+Email
+ {{ form.email}}
+ <font size="3px" color="red"> {{email_check}}</font>
+ <br>
+ Re-type Email
+ <input type="email" name="email1">
+<br>
+Password
+{{ form.password}}
+<br>
+Re-type Password
+<br>
+<input type="password" name="pass1">
+Interest
+{{ form.Interest}}<br>
+Profile Picture
+{{ form.profile}}<br>
+
+
+
+</div>
+    <input type="submit" name="submit" value="Upload">
+  </form>
+</p>
+  </div>
+</div>
+    
+    	{% endblock %}

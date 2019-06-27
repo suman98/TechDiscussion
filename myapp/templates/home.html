@@ -1,0 +1,115 @@
+   {% extends 'base/base.html' %}
+   {% load staticfiles %}
+  {% block Title %}
+  Tech discussion
+  {% endblock %}
+  {% block side_post %}
+  
+   <div class="column left" style="border-radius: 10px;  text-align: justify; " >
+
+  <marquee direction="up" onmouseover="stop()" onmouseout="start()" scrollamount="3"  >
+    {% for i in "123" %}
+    <strong>News {{i}}</strong><br>
+    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+    cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+    proident, sunt in culpa qui officia deserunt mollit anim id est laborum<br>
+  {% endfor %}  
+  </marquee>
+   </div>
+   {% endblock %}
+    {% block contain %}
+        <div id="cards" >
+          <div align="right">
+            {% if request.session.username %}
+       <a href="{% url 'ask' %}" target="blank"> <button id="postbutton" onclick="check_login('{{request.session.username}}')">Ask Question</button></a>
+       {% else %}
+        <a href="{% url 'check_login' %}"> <button id="postbutton" onclick="check_login('{{request.session.username}}')">Ask Question</button></a>
+       {% endif %}
+      </div>
+      <br>
+      <table style="width:100%;">
+        <tr>
+          {% if request.session.username %}
+        <a href="{% url 'index' %}">  <button class="choice_button">Interested</button></a>
+          {% endif %}
+          <a href="../?select=latest"> <button class="choice_button"> Latest</button></a>
+           <a href="../?select=view"><button class="choice_button">Most viewed</button></a>
+          <a href="../?select=like"> <button class="choice_button">Most Liked</button></a>
+            
+        </tr>
+      </table>
+        </div>
+        {% if next and next != "None" %}
+          <br><div id="cards">
+          Did you mean: <font color="red">{{next.0}}</font> Or Search instead <a href="/search?search_q&no_correction={{next.1}}"><mark>{{next.1}}</mark></a>
+        </div><br>
+          {% endif %}
+        {% if post_home %}    
+        <br><div id ="Column_main_show">
+         {% for profile,name,status,like,views_ans in post_home %}
+          <div id="cards">
+            <div align="left" id ="question_home">
+             <font color="#949494">  Tags:{{status.topics}} </font>
+             {% if request.session.username in status.user_id %}
+           <a href="javascript:conform_delete('{{status.question_id}}','q')"><font color="blue">Delete
+           </font></a>{% endif %}<br>
+    <strong><a href="/view_item?question_id={{status.question_id}}" target="blank"><font size="5px">{{status.question}}</font></a></strong>
+        <div id="grid-container-post">
+          <div id="item1"><a href="/profile?profile={{status.user_id}}"><img src="{{profile.url}}" alt="images"></a></div>
+         <div id="item2"> <b><a href="/profile?profile={{status.user_id}}">{{name}}{% if request.session.username == status.user_id %} (You){% endif %}</a></b></div>
+          <div id="item3"> <font color="#949494" size="2px"> <em>{{status.uploaded_at.date}}</em></font></div>
+        </div>
+       <br>
+       {{status.description}}<br><br>
+        {% if status.question_img %}
+        <div align="center"> <img src="{{status.question_img.url}}" width="80%"></div>
+            {% endif %}
+        <br><br>
+        <div id="{{status.question_id}}" align="left">
+          <table style="width:100%" id="customers">
+              <tr>
+             {% if request.session.username %}
+             {% if "no" in like.1 %}
+            <td><m> <button onclick="return like('{{status.question_id}}','like')"><img src="{% static 'images/like.png' %}" height="20px" width="20px">{{like.0}}</button></m></td>
+             {% else %}
+            <td> <m><button onclick="return like('{{status.question_id}}','like')"><img src="{% static 'images/unlike.png' %}" height="20px" width="20px">{{like.0}}</button></m></td>
+              {% endif %}
+              {% else %}
+             <td> <m><button type="button"><img src="{% static 'images/like.png' %}" height="20px" width="20px">{{like.0}}</button></m></td>
+            {% endif %}
+         <td><m><button><img src="{% static 'images/eye.png' %}" height="20px">{{views_ans.0}}</button></m></td>
+            <td><m><button><img src="{% static 'images/answer.png' %}" height="20px">{{views_ans.1}}</button></m></td>
+             {% if request.session.username %}
+            {% if request.session.username != status.user_id %} <td><m><button onclick="return report('{{status.question_id}}')"><img src="{% static 'images/report.png' %}" height="20px"></button></m></td>{% endif %}
+            {% endif %}
+          </tr>
+        </table>
+        </div>
+      </div>
+    </div>
+    <br>
+    {% endfor %}
+  
+      </div>
+      {% else %}<br>
+      <div id="cards" align="center">
+        <strong><font size="5px">No result found</font></strong>
+      </div><br>
+
+      {% endif %}
+{% endblock %}
+{% block page %}
+  {% if total_page %}
+  <div id="cards">
+    <tr>
+      <td> Page</td>
+       {% for obj in total_page %} 
+      <td><a href="?page={{obj}}">{{obj}}</a></td> 
+    {% endfor %}
+    </tr>
+</div>
+{% endif %}
+    {% endblock %}

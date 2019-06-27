@@ -1,0 +1,40 @@
+{% extends 'base/base.html' %}
+   {% load staticfiles %}
+    {% block Title %}
+{{receiver.Fname}} {{receiver.Lname}}
+  {% endblock %}
+  {% block contain %}
+<div align="left" id="profile_refresh">
+       <div id="message">
+        {% if "Empty" in Message %}
+       <br><br><marquee><strong> No any message</strong></marquee>
+        <div align="center" style="text-transform: uppercase;">
+          <img src="{{receiver.profile.url}}" style="border-radius: 50%; width: 150px;">
+          <br><Stong>{{receiver.Fname}} {{receiver.Lname}}</Stong>
+        </div>
+        {% else %}
+        {% for msg in Message %}
+        <br>
+          {% if request.session.username == msg.sender_id %}
+          <div id="sender"> {{msg.message}}</div>
+          {% else %}
+       <div id="receiver"> <a href="/profile?profile={{receiver.user_id}}"><img src="{{receiver.profile.url}}"></a> {{msg.message}}</div>
+         {% endif %}
+         {% endfor %}
+         <br><br>
+          <div align="center" style="text-transform: uppercase;">
+          <img src="{{receiver.profile.url}}" style="border-radius: 50%; width: 150px;">
+          <br><strong> {{receiver.Fname}} {{receiver.Lname}}</strong>
+        </div>
+        {% endif %}
+      </div>
+        <div style="margin-top: 30%; width: 40%; position: fixed">
+<form method="POST" id="Message"  onsubmit="return message()">
+    {% csrf_token %}
+  <textarea placeholder="Enter the message......." name="message" rows="7" cols="80" required></textarea>
+  <input type="hidden" name="receiver" value="{{receiver.user_id}}">
+  <button type="submit" style="width: 70px; height: 40px; cursor: pointer; ">Send</button>
+</form>
+ </div>
+  </div>
+  {% endblock %}

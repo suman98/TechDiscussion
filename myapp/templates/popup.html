@@ -1,0 +1,99 @@
+   {% load staticfiles %}
+<head>
+<style>
+/* The Modal (background) */
+.modal {
+  display: block; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  padding-top: 60px; /* Location of the box */
+  left: 0;
+  top:0;
+  width: 30%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0); /* Black w/ opacity */
+}
+
+/* Modal Content */
+.modal-content {
+  background-color: #fefefe;
+  margin: auto;
+  padding: 0px;
+  border: 1px solid #888;
+  width: 81%;
+  border-radius: 8px;
+}
+
+/* The Close Button */
+.close {
+  color: #aaaaaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bo;
+}
+
+.close:hover,
+.close:focus {
+  color: #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.modal-content img{
+  height: 30px;
+  width: 30px;
+  border-radius: 50%;
+}
+</style>
+</head>
+<body>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+
+  {% if notifications %}
+
+    <p><br><font color="blue" size="5px">Notifications</font>
+          <div style="margin: 10px;
+  border: 0.5px solid black;"></div>
+  {% for obj in notifications %}
+    {% if obj.0 == "like" %}
+<img src="{% static 'images/like.png' %}" > <b><a href="/profile?profile={{obj.2.0}}"> {{obj.2.0}}</a> <a href="/profile?profile={{obj.2.1}}">{{obj.2.1}}</a></b> {% if obj.2|length > 2 %}  and {{ obj.2|length|add:"-2"}} other {% endif %}
+    has liked to yours questions<br>
+    {% else %}
+<img src="{% static 'images/answer.png' %}"><b><a href="/profile?profile={{obj.2.0}}">{{obj.2.0}}</a><a href="/profile?profile={{obj.2.1}}"> {{obj.2.1}}</a></b> {% if obj.2|length > 2 %}  and {{ obj.2|length|add:"-2"}} other {% endif %} has answered on 
+    {% endif %}<br>
+      <strong><a href="/view_item?question_id={{obj.1.question_id}}" target="blank"><font size="3px">{{obj.1.question}}</font></a></strong></p>
+      <div style="margin: 10px;
+  border: 0.5px solid black;"></div>
+    {% endfor %}
+
+    {% elif Message %}
+    <p><br><font color="blue" size="5px">Mesage</font>
+          <div style="margin: 10px;
+  border: 0.5px solid black;"></div>
+    {% for msg,sender in Message %}
+
+ 
+  <a href="/message?receiver={{sender.user_id}}"> <div style="text-transform: capitalize;"> <img src="{{sender.profile.url}}"><b>{{sender.Fname}} {{sender.Lname}}</b></div><br>
+    <div style="margin-left: 30px;">{{msg.message}}<br>
+    <font color="#949494" size="2px"><em> {{msg.uploaded_at}}</em></font></a><br></div>
+     <div style="margin: 10px;
+  border: 0.5px solid black;"></div>
+    {% endfor %}
+    {% else %}
+    <p><br><font color="blue" size="5px">No any updates</font>
+          <div style="margin: 10px;
+  border: 0.5px solid black;"></div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script src="{% static 'js/popup.js' %}"></script>
+
+</body>

@@ -1,0 +1,105 @@
+   {% extends 'base/base.html' %}
+   {% load staticfiles %}
+  
+   {% block contain %}
+   {% if request.session.username %}
+      <div class="forms">
+           
+          {% if form %}
+             <ul>
+                <caption><b>TIPS FOR ASKING QUESTIONS:-</b><br><br></caption>
+                <li>
+                  Make sure that the questions has not been asked<br></li>
+                </li>
+                <li>Enter the name in inverted commas<br> </li>
+                <li>Short form words should be included in CAPSWORDS <br></li>
+
+                </ul>
+               <div id="cards" >
+        <p> 
+
+<form method="post" enctype="multipart/form-data" name="ask" onsubmit="return Question()">
+    {% csrf_token %}
+      {% if check %}
+  <div class="upload-btn-wrapper">
+   Questions<br>{% if check == "first" %}<input type="checkbox" name="on_spell" checked> Spell check {% endif %}
+   <b>{{form.question}}</b>
+    {% if corrected %}
+    <input type="hidden" name="try" value="second">
+     <font color="red"><i>Do you mean <b>'{{corrected}}'</b> ?</i></font>
+     {% else %}
+     <input type="hidden" name="try" value="first">
+     {% endif %}
+     <br>
+</div>
+    <input type="submit" name="submit" value="Next">
+  </form>
+  </p>
+  </div>
+</div>
+     {% endif %}
+     {% if check2 %}
+     <div class="upload-btn-wrapper">
+       {% if topic == "unable" %}
+      <font color="red">We can't predict the topic please select menually</font>
+      {% else %}
+      <font color="blue">Please check the predicted topic</font>
+      {% endif %}<br>
+      Topic
+     {{form.topics}}
+     <br>
+     Questions
+     {{form.question.as_hidden}}
+     <br><br>
+     <font size="6px"><b>{{check2}}</b></font>  
+     <br> <br>
+     Descriptions
+     {{form.description}}
+     Upload Photo if required
+     {{form.question_img}}
+      <input type="submit" name="submit" value="POST" onclick="return check_topic()">
+    </div>
+     </div>
+   
+  </form>
+
+</p>
+  </div>
+<div id="cards" >
+ <div id="Container"></div>
+  Similar Questions:-
+  {% if similar == "NOTHING" %}
+  No any similar Questions
+  {% else %}
+  <br>{% for obj in similar %}
+   <div style="margin: 10px;
+  border: 0.5px solid black;"></div>
+ <a href="/view_item?question_id={{obj.question_id}}">  {{obj.question}}</a>
+  {% endfor %}
+  {% endif %}
+  </div>
+</div>
+  {% endif %}
+    {% endif %}
+    {% if warning %}
+    {% if warning == "error" %}
+    <p>
+      <div id="cards" >
+<font color="red">Please enter valid question</font>
+</div>
+    </p>
+    {% else %}
+    <p>
+    <font color="red">This questions has already been asked</font>
+     <div id="cards" >
+   <strong> <a href="/view_item?question_id={{warning.question_id}}">{{warning.question}}</a></strong>
+  </div></p>
+    {% endif %}
+    {% endif %}
+    {% else %}
+    <br>
+    <h1>OPPS!!!!!! YOU HAD NOT LOGED IN </h1>
+    {% endif %}
+    {% endblock %}
+
+    

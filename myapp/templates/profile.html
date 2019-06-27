@@ -1,0 +1,78 @@
+{% extends 'base/base.html' %}
+   {% load staticfiles %}
+    {% block Title %}
+{{user_profile.Fname}} {{user_profile.Lname}}
+  {% endblock %}
+
+   {% block side_post %}
+   <div class="column left" >
+   <div id="profile">
+     <div id="grid-container-post1">
+          <div id="item1"><img src="{{user_profile.profile.url}}" alt="images"></div>
+         <div id="item2"><b><strong><font size="6px">{{user_profile.Fname}}&nbsp;{{user_profile.Lname}}{% if request.session.username == user_profile.user_id %} (You){% endif %}</font></strong></b></div>
+         <div id="item3">Lives in {{user_profile.Address}}</div>
+         <div id="item4">Email address: <mail>{{user_profile.email}}</mail></div>
+         <div id="item5">Interested in:- <font color="#949494" size="2px"> <em>{{user_profile.Interest}}</em></font></div>
+        </div>
+            {% if request.session.username == user_profile.user_id %}
+          <button id="profilebutton">Edit profile</button>
+            {% elif request.session.username != user_profile.user_id and request.session.username %}
+        <button id="profilebutton"><a href="/message?receiver={{user_profile.user_id}}">Send Message</a></button>
+  {% endif %}
+        <div style="margin: 10px;
+  border: 1px solid black;"></div>
+  <button id="profilebutton"><a href="/profile?profile={{user_profile.user_id}}">Questions : {{Question|length}}</a></button>
+    <button id="profilebutton" onclick="return profile_refresh('{{user_profile.user_id}}','answer')"> Answered : {{user_data_q.0}}</button><br><br>
+   <button id="profilebutton" onclick="return profile_refresh('{{user_profile.user_id}}','like')"> Liked : {{user_data_q.1}} </a></button>
+    <button id="profilebutton"onclick="return profile_refresh('{{user_profile.user_id}}','view')"> Viewed : {{user_data_q.2}} </a></button>
+        </div>
+    </div>
+    </div>
+  </div>
+   {% endblock %}
+    {% block contain %}
+     <div align="left" id="profile_refresh">
+{% if edit_profile %}
+{% endif %}
+
+      {% if Question or Question == "" %}
+    <div id="cards">
+          <div align="left">
+          	{% if  Question == "" %}
+          	<strong><font size="6px">{{user_profile.Fname}} has not posted any questions</font></strong>
+          	{% else %}
+          	<strong><font size="6px">Question that has been asked by {{user_profile.Fname}}</font></strong>
+          	{% endif %}
+          </div>
+      </div>
+      <br>
+      <div id="cards">
+          	{% if   Question == ""  %}
+          		<div style="margin: 10px;
+  border: 0.5px solid #4CAF50;"></div>
+          	{% else %}
+          	{% for status in Question %}
+          	<font color="#949494">  Tags:{{status.topics}} </font><font color="blue">{% if request.session.username in status.user_id %}
+              <a href="javascript:conform_delete('{{status.question_id}}','/profile/')"><font color="blue">Delete
+           </font></a>{% endif %}</font><br>
+    <strong><a href="/view_item?question_id={{status.question_id}}" target="blank"><font size="5px">{{status.question}}</font></a></strong>
+        <div id="grid-container-post">
+          <div id="item1"><img src="{{user_profile.profile.url}}" alt="images"></div>
+         <div id="item2"> <b><a href="#">{{user_profile.Fname}}{% if request.session.username in status.user_id %} (You){% endif %}</a></b></div>
+          <div id="item3"> <font color="#949494" size="2px"> <em>{{status.uploaded_at.date}}</em></font></div>
+        </div><br>
+       {{status.description}}
+        {% if status.question_img %}
+        <div align="center"> <img src="{{status.question_img.url}}" width="80%"></div>
+            {% endif %}
+       <div style="margin: 10px;
+  border: 0.5px solid #4CAF50;"></div>
+       {% endfor %}
+       {% endif %}
+      
+          </div>
+        </div>
+
+       {% endif %}
+      </div>
+    {% endblock %}

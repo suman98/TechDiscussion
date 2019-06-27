@@ -1,0 +1,113 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+  <title>
+  {% block Title %}
+  {% endblock %}
+  </title>
+    {% block static_file %}
+   <link  rel="icon" type="image/ico" href="{% static 'images/tech.png' %}"/>
+  <link rel = "stylesheet" type="text/css" href ="{% static 'css/header.css' %}">
+  <link rel = "stylesheet" type="text/css" href ="{% static 'css/message.css' %}">
+  <link rel = "stylesheet" type="text/css" href ="{% static 'css/main.css' %}">
+   <link rel = "stylesheet" type="text/css" href ="{% static 'css/login.css' %}">
+  <script src="{% static 'js/refresh.js' %}"></script>
+<script src="{% static 'js/validate.js' %}"></script>
+  <script src="{% static 'js/message.js' %}"></script>
+    {% endblock %}
+</head>
+<body>
+  
+  <headerarea>
+  	<div class="navbar">
+      
+  <a href="{% url 'index' %}">
+ <img src="{% static 'images/logo.png' %}" height="30px" ></a>
+     {% if request.session.username %}
+   <div class="dropdown">
+    <button class="dropbtn">
+       {% if Cmessage > 0 %}
+     <strong><img src="{% static 'images/message.png' %}" height="30px" > <font color="red">  {{Cmessage}}</font></strong>
+  {% else %}
+<img src="{% static 'images/message.png' %}" height="30px" >
+  {% endif %}
+    </button>
+    <div class="dropdown-content">
+  <a href="javascript:Message('sent')">Sent</a></td>
+     <a href="javascript:Message('received')">Received ({{Cmessage}} new) </a>
+    </div>
+    </div>
+    <a href="javascript:Notification()">
+      {% if notify > 0 %}  
+   <img src="{% static 'images/ring.png' %}" height="30px" ><font color="red">  {{notify}}</font>
+   {% else %}
+   <img src="{% static 'images/notification.png' %}" height="30px" >
+    {% endif %}
+     </a>
+    {% endif %}
+         <div class="search-container">
+    <form action="/search/" method="get" name="search_form" onsubmit="return check_search()">
+    <table>
+    <tr>
+     <td width="89%"><input type="text" placeholder="Search Question........." name="search_q" required></td>
+    <td> <button type="submit">SEARCH</i></button></td>
+  </tr>
+  </table>
+    </form>
+  </div>
+    
+  <div class="login-to">
+    {% if request.session.username %}
+     <img src="{{request.session.profile}}" alt="images">
+    <div class="dropdown">
+     
+    <button class="dropbtn">{{request.session.username}}
+    </button>
+    <div class="dropdown-content">
+      <a href="/profile/" boarder="1">Profile</a>
+      <a href="{% url 'logout' %}">Log out</a>
+    </div>
+    </div>
+{% else %}
+	<a href="{% url 'check_login' %}">Login</a>
+    <a href="{% url 'signup' %}">Sign up</a>
+{% endif %}
+</div>
+</div>
+
+</headerareas>
+{% block notifications %}
+<div id ="Notification">
+</div>
+{% endblock %}
+<div class="main_pro" >
+  {% block topics %}
+    <div class="column left_home" align="center" ><br>
+<button><a href="/"><img src="{% static 'images/feeds.png' %}" alt="images"><strong> Feeds&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></button></a><br><br>
+<button onclick="return topics('Smartphone')"><img src="{% static 'images/phone.png' %}" alt="images"><strong>Mobility&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</strong></button><br><br>
+<button onclick="return topics('Hardware')"><img src="{% static 'images/computer.png' %}" alt="images"><strong> Hardware</strong></button><br><br>
+<button onclick="return topics('Software and App')"><img src="{% static 'images/software.png' %}" alt="images"><strong>&nbsp;Software</strong></button><br><br>
+<button onclick="return topics('Gamming')"><img src="{% static 'images/game.png' %}" alt="images"><strong> Gamming&nbsp;</strong></button><br><br>
+<button onclick="return topics('Security')"><img src="{% static 'images/security.png' %}" alt="images"><strong> Security&nbsp;&nbsp;</strong></button><br><br>
+<button onclick="return topics('Internet')"><img src="{% static 'images/internet.png' %}" alt="images"><strong> Internet&nbsp;&nbsp;&nbsp;</strong></button><br><br>
+   </div>
+{% endblock %}
+      <h2></h2>
+    {% block side_post %}
+    {% endblock %}
+<div class="contain">
+<div class="column middle">
+{% block contain %}
+{% endblock %}
+{% block page %}
+{% endblock %}
+</div>
+</div>
+</div>
+
+<script src="{% static 'js/ajaxref.min.js' %}"></script>
+ 
+</body>
+</html>
+

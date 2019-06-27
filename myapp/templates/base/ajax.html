@@ -1,0 +1,104 @@
+  {% load staticfiles %}
+  {% if like %}
+		<div id="{{question_id}}" align="left">
+          <table style="width:100%" id="customers">
+              <tr>
+             {% if request.session.username %}
+             {% if "no" in like.1 %}
+       <td><m> <button onclick="return like('{{question_id}}','like')"><img src="{% static 'images/like.png' %}" height="20px" width="20px">{{like.0}}</button></m></td>
+             {% else %}
+       <td> <m><button onclick="return like('{{question_id}}','like')"><img src="{% static 'images/unlike.png' %}" height="20px" width="20px">{{like.0}}</button></m></td>
+              {% endif %}
+            {% endif %}
+       <td><m><button><img src="{% static 'images/eye.png' %}" height="20px">{{views.0}}</button></m></td>
+            <td><m><button><img src="{% static 'images/answer.png' %}" height="20px">{{views.1}}</button></m></td>
+            {% if request.session.username %}
+            {% if request.session.username != name %} <td><m><button onclick="return report('{{status.question_id}}')"><img src="{% static 'images/report.png' %}" height="20px"></button></m></td>{% endif %}
+            {% endif %}
+          </tr>
+        </table>
+        </div>
+        {% endif %}
+
+ {% if anslike %}
+ <div id="customers">
+ <div id="{{ans_id}}">
+   {% if request.session.username %}
+             {% if "no" in anslike.1 %}
+             <td>  <m> <button onclick="return like('{{ans_id}}','anslike')"><img src="{% static 'images/like.png' %}" height="20px" width="20px">
+                {{anslike.0}}</button></m></td>
+             {% else %}
+              <td> <m><button onclick="return like('{{ans_id}}','anslike')"><img src="{% static 'images/unlike.png' %}" height="20px" width="20px">
+               {{anslike.0}}</button></m></td>
+              {% endif %}
+              {% else %}
+            <td><m> <button><img src="{% static 'images/like.png' %}" height="20px">{{like.0}}</button></m></td>
+            {% endif %}
+            {% if request.session.username == name or request.session.username == Question_ref.user_id %}
+            <td><m> <button onclick="return conform_delete();"><img src="{% static 'images/delete.png' %}" height="20px"></button></m></td>
+            {% endif %}
+          </div>
+     </div>    
+ {% endif %}
+{% if Question %}
+<div id="cards">
+   <div align="left" id="profile_refresh">
+            {% if   ""  in Question %}
+            No any post
+              <div style="margin: 10px;
+  border: 0.5px solid #4CAF50;"></div>
+            {% else %}
+
+            {% for status in Question  %}
+            <font color="#949494">  Tags:{{status.topics}} </font><br>
+    <strong><a href="/view_item?question_id={{status.question_id}}" target="blank"><font size="5px">{{status.question}}</font></a></strong>
+ <div style="margin: 10px;
+  border: 0.5px solid #4CAF50;"></div>
+       {% endfor %}
+       {% endif %}
+          </div>
+        </div>
+{% endif %}
+
+
+
+{% if sort_ans %}
+
+<div id="ans_refresh">
+    {% for profile ,name , ans ,like in sort_ans %}
+   <div style="margin: 10px;
+  border: 0.5px solid #4CAF50;"></div>
+    <div id="grid-container-post">
+          <div id="item1"><a href="/profile?profile={{ans.user_id}}"><img src="{{profile.url}}" alt="images"></a></div>
+         <div id="item2"> <b><a href="#">{{name}}{% if request.session.username == ans.user_id %} (You){% endif %}</a></b></div>
+          <div id="item3"> <font color="#949494" size="2px"> <em>{{ans.uploaded_at.date}}</em></font></div>
+        </div>
+        <br>
+        {{ans.answer}}
+        <br>
+          {% if ans.answer_img %}
+        <div align="center"> <img src="{{ans.answer_img.url}}" width="80%"></div>
+            {% endif %}
+         <div id="customers">
+        <div id="{{ans.answer_id}}">
+       {% if request.session.username %}
+             {% if "no" in like.1 %}
+             <td>  <m> <button onclick="return like('{{ans.answer_id}}','anslike')"><img src="{% static 'images/like.png' %}" height="20px" width="20px">
+                {{like.0}}</button></m></td>
+             {% else %}
+              <td> <m><button onclick="return like('{{ans.answer_id}}','anslike')"><img src="{% static 'images/unlike.png' %}" height="20px" width="20px">
+               {{like.0}}</button></m></td>
+              {% endif %}
+              {% else %}
+            <td><m> <button><img src="{% static 'images/like.png' %}" height="20px">{{like.0}}</button></m></td>
+            {% endif %}
+           
+            {% if request.session.username == ans.user_id or request.session.username == Question.user_id %}
+            <td><m> <button onclick="return conform_delete();"><img src="{% static 'images/delete.png' %}" height="20px"></button></m></td>
+            {% endif %}
+           </div>
+        </div>
+         {% endfor %}
+       </div>
+       
+{% endif %}

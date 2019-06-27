@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+   {% load staticfiles %}
+    {% block contain %}
+    	 <div class="forms">
+        <br><br>
+        <div id="cards" >
+               
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="number" name="v_code" placeholder="Enter the code we sent" >
+    <input type="hidden" name="u_id" value="{{id}}">
+    <input type="submit" name="submit">
+    </form>
+</div>
+</div>
+   
+    {% endblock %}
