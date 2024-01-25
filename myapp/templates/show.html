@@ -1,99 +1,168 @@
-   {% extends 'base/base.html' %}
-   {% load staticfiles %}
-    {% block Title %}
-{{Question.question}}
-  {% endblock %}
-   {% block side_post %}
-   <div class="column left">
-  <h2><font style="text-decoration: underline overline;" align="right">Related Questions</font></h2>
+{% extends 'base/base.html' %} {% load staticfiles %} {% block Title %}
+{{Question.question}} {% endblock %} {% block side_post %}
+<div class="column left">
+  <h2>
+    <font style="text-decoration: underline overline" align="right"
+      >Related Questions</font
+    >
+  </h2>
   <ol>
-    {% if Related == "NOTHING" %}
-    NO ANY SIMILAR QUESTION FOR THIS QUESTION
-    {% else %}
-    {% for obj , score in Related %}
-   <li><a href="/view_item?question_id={{obj.question_id}}">{{obj.question}}</a><br><!-- ({{score}}) --></li>
-   <br>
-   {% endfor %}
-   {% endif %}
-</ol>
+    {% if Related == "NOTHING" %} NO ANY SIMILAR QUESTION FOR THIS QUESTION {%
+    else %} {% for obj , score in Related %}
+    <li>
+      <a href="/view_item?question_id={{obj.question_id}}">{{obj.question}}</a
+      ><br /><!-- ({{score}}) -->
+    </li>
+    <br />
+    {% endfor %} {% endif %}
+  </ol>
 </div>
-   {% endblock %}
+{% endblock %}
 
 <!-- RElated question ends here -->
 
-   {% block contain %}
-    <div id="cards" >
-      <font color="#949494">  Tags:{{Question.topics}}</font><br>
-      <strong><font size="6px">{{Question.question}}</font></strong><br>
-      <font color="#949494">{{Question.uploaded_at}}</font><br><br>
-      {{Question.description}}<br><br>
-       {% if Question.question_img %}
-        <div align="center">  <img src="{{Question.question_img.url}}" width="80%" ></div>
-    {% endif %}
-   <div align="right">Asked by:-<a href="/profile?profile={{Question.user_id}}"><b>{{Question.user_id}}</b></a>{% if request.session.username == Question.user_id %}(You){% endif %}
-   </div> </div>
-    <br>
-    <div id="cards">
-      {% if request.session.username %}
-      Post your answer:-
-      <br>
-      <form method="POST" id="formcomment"  onsubmit="return comment()">
-        {% csrf_token %}
-      <TEXTAREA name="answer" placeholder="Enter yours answer here............." maxlength='255' rows="9" cols="50" required></TEXTAREA>
-      <input type="hidden" name="question_id" value="{{Question.question_id}}">
-       <button type="Submit" name= "Post"  id="profilebutton" > Answer</button> <input type="file" width="48" height="48" name='answer_img'>
-    </form>
-    {% endif %}
-    <br>
-    <div id="question_answer">
+{% block contain %}
+<div id="cards">
+  <font color="#949494"> Tags:{{Question.topics}}</font><br />
+  <strong><font size="6px">{{Question.question}}</font></strong
+  ><br />
+  <font color="#949494">{{Question.uploaded_at}}</font><br /><br />
+  {{Question.description}}<br /><br />
+  {% if Question.question_img %}
+  <div align="center">
+    <img src="{{Question.question_img.url}}" width="80%" />
+  </div>
+  {% endif %}
+  <div align="right">
+    Asked by:-<a href="/profile?profile={{Question.user_id}}"
+      ><b>{{Question.user_id}}</b></a
+    >{% if request.session.username == Question.user_id %}(You){% endif %}
+  </div>
+</div>
+<br />
+<div id="cards">
+  {% if request.session.username %} Post your answer:-
+  <br />
+  <form method="POST" id="formcomment" onsubmit="return comment()">
+    {% csrf_token %}
+    <textarea
+      name="answer"
+      placeholder="Enter yours answer here............."
+      maxlength="255"
+      rows="9"
+      cols="50"
+      required
+    ></textarea>
+    <input type="hidden" name="question_id" value="{{Question.question_id}}" />
+    <button type="Submit" name="Post" id="profilebutton">Answer</button>
+    <input type="file" width="48" height="48" name="answer_img" />
+  </form>
+  {% endif %}
+  <br />
+  <div id="question_answer">
     {% if total_ans == 0 %}
-   <div align="center"><b> NO ANY ANSWER POSTED </b></div>
+    <div align="center"><b> NO ANY ANSWER POSTED </b></div>
     {% else %}
     <div align="center"><strong>{{total_ans}} Answers</strong></div>
-     <div style="margin: 10px;
-  border: 0.5px solid #4CAF50;"></div>
-    <button onclick="arrange_ans('{{Question.question_id}}','like')" id="profilebutton">Most Liked Answer</button>
-     <button onclick="arrange_ans('{{Question.question_id}}','latest')" id="profilebutton">Latest Answer</button>
+    <div style="margin: 10px; border: 0.5px solid #4caf50"></div>
+    <button
+      onclick="arrange_ans('{{Question.question_id}}','like')"
+      id="profilebutton"
+    >
+      Most Liked Answer
+    </button>
+    <button
+      onclick="arrange_ans('{{Question.question_id}}','latest')"
+      id="profilebutton"
+    >
+      Latest Answer
+    </button>
     <div id="ans_refresh">
-    {% for profile ,name , ans ,like in Answer %}
-   <div style="margin: 10px;
-  border: 0.5px solid #4CAF50;"></div>
-    <div id="grid-container-post">
-          <div id="item1"><a href="/profile?profile={{ans.user_id}}"><img src="{{profile.url}}" alt="images"></a></div>
-         <div id="item2"> <b><a href="#">{{name}}{% if request.session.username == ans.user_id %} (You){% endif %}</a></b></div>
-          <div id="item3"> <font color="#949494" size="2px"> <em>{{ans.uploaded_at.date}}</em></font></div>
+      {% for profile ,name , ans ,like in Answer %}
+      <div style="margin: 10px; border: 0.5px solid #4caf50"></div>
+      <div id="grid-container-post">
+        <div id="item1">
+          <a href="/profile?profile={{ans.user_id}}"
+            ><img src="{{profile.url}}" alt="images"
+          /></a>
         </div>
-        <br>
-        {{ans.answer}}
-        <br>
-          {% if ans.answer_img %}
-        <div align="center"> <img src="{{ans.answer_img.url}}" width="80%"></div>
-            {% endif %}
-         <div id="customers">
+        <div id="item2">
+          <b
+            ><a href="#"
+              >{{name}}{% if request.session.username == ans.user_id %} (You){%
+              endif %}</a
+            ></b
+          >
+        </div>
+        <div id="item3">
+          <font color="#949494" size="2px">
+            <em>{{ans.uploaded_at.date}}</em></font
+          >
+        </div>
+      </div>
+      <br />
+      {{ans.answer}}
+      <br />
+      {% if ans.answer_img %}
+      <div align="center"><img src="{{ans.answer_img.url}}" width="80%" /></div>
+      {% endif %}
+      <div id="customers">
         <div id="{{ans.answer_id}}">
-       {% if request.session.username %}
-             {% if "no" in like.1 %}
-             <td>  <m> <button onclick="return like('{{ans.answer_id}}','anslike')"><img src="{% static 'images/like.png' %}" height="20px" width="20px">
-                {{like.0}}</button></m></td>
-             {% else %}
-              <td> <m><button onclick="return like('{{ans.answer_id}}','anslike')"><img src="{% static 'images/unlike.png' %}" height="20px" width="20px">
-               {{like.0}}</button></m></td>
-              {% endif %}
-              {% else %}
-            <td><m> <button><img src="{% static 'images/like.png' %}" height="20px">{{like.0}}</button></m></td>
-            {% endif %}
-           
-            {% if request.session.username == ans.user_id or request.session.username == Question.user_id %}
-            <td><m> <button onclick="return conform_delete('{{ans.answer_id}}','a')"><img src="{% static 'images/delete.png' %}" height="20px"></button></m></td>
-            {% endif %}
-           </div>
+          {% if request.session.username %} {% if "no" in like.1 %}
+          <td>
+            <m>
+              <button onclick="return like('{{ans.answer_id}}','anslike')">
+                <img
+                  src="{% static 'images/like.png' %}"
+                  height="20px"
+                  width="20px"
+                />
+                {{like.0}}
+              </button></m
+            >
+          </td>
+          {% else %}
+          <td>
+            <m
+              ><button onclick="return like('{{ans.answer_id}}','anslike')">
+                <img
+                  src="{% static 'images/unlike.png' %}"
+                  height="20px"
+                  width="20px"
+                />
+                {{like.0}}
+              </button></m
+            >
+          </td>
+          {% endif %} {% else %}
+          <td>
+            <m>
+              <button>
+                <img
+                  src="{% static 'images/like.png' %}"
+                  height="20px"
+                />{{like.0}}
+              </button></m
+            >
+          </td>
+          {% endif %} {% if request.session.username == ans.user_id or
+          request.session.username == Question.user_id %}
+          <td>
+            <m>
+              <button onclick="return conform_delete('{{ans.answer_id}}','a')">
+                <img
+                  src="{% static 'images/delete.png' %}"
+                  height="20px"
+                /></button
+            ></m>
+          </td>
+          {% endif %}
         </div>
-         {% endfor %}
-           <div style="margin: 10px;
-  border: 0.5px solid #4CAF50;"></div>
-        
-       </div>
-     </div>
-        {% endif %}
-   </div>
-   {% endblock %}
+      </div>
+      {% endfor %}
+      <div style="margin: 10px; border: 0.5px solid #4caf50"></div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
